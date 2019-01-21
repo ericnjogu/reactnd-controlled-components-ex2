@@ -1,35 +1,33 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import NewItemInput from './NewItemInput';
+import ItemList from './ItemList';
 
 class App extends React.Component {
   state = {
     value: '',
-    items: [],
   };
 
-  handleChange = event => {
+/*
+had to add parenthesis to the event variable to fix 'undefined' errors
+*/
+  handleChange = (event) => {
     this.setState({ value: event.target.value });
   };
 
-  addItem = event => {
+  addItem = (event, itemList) => {
     event.preventDefault();
-    this.setState(oldState => ({
+    itemList.setState(oldState => ({
       items: [...oldState.items, this.state.value],
     }));
-  };
-
-  deleteLastItem = event => {
-    this.setState(prevState => ({ items: this.state.items.slice(0, -1) }));
   };
 
   inputIsEmpty = () => {
     return this.state.value === '';
   };
 
-  noItemsFound = () => {
-    return this.state.items.length === 0;
-  };
+  
 
   render() {
     return (
@@ -40,23 +38,14 @@ class App extends React.Component {
         </header>
         <h2>Shopping List</h2>
         <form onSubmit={this.addItem}>
-          <input
-            type="text"
-            placeholder="Enter New Item"
+          <NewItemInput
             value={this.state.value}
-            onChange={this.handleChange}
+            handleChange={this.handleChange}
           />
           <button disabled={this.inputIsEmpty()}>Add</button>
         </form>
-
-        <button onClick={this.deleteLastItem} disabled={this.noItemsFound()}>
-          Delete Last Item
-        </button>
-
-        <p className="items">Items</p>
-        <ol className="item-list">
-          {this.state.items.map((item, index) => <li key={index}>{item}</li>)}
-        </ol>
+		
+		<ItemList/>
       </div>
     );
   }
